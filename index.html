@@ -57,7 +57,7 @@
         /* ==========================================
            SUSPENSE GATE MECHANICS (THE LOCKS)
            ========================================== */
-        #gate-screen, #confirm-modal, #inbox-modal {
+        #gate-screen, #confirm-modal, #inbox-modal, #dhananjay-modal {
             position: fixed;
             top: 0;
             left: 0;
@@ -74,7 +74,7 @@
             padding: 20px;
         }
 
-        #confirm-modal, #inbox-modal {
+        #confirm-modal, #inbox-modal, #dhananjay-modal {
             z-index: 10001;
             background: rgba(2, 0, 5, 0.94);
             opacity: 0;
@@ -82,7 +82,7 @@
             transform: scale(0.8) rotate(-2deg);
         }
 
-        #confirm-modal.active, #inbox-modal.active {
+        #confirm-modal.active, #inbox-modal.active, #dhananjay-modal.active {
             opacity: 1;
             pointer-events: auto;
             transform: scale(1) rotate(0deg);
@@ -572,12 +572,32 @@
                 <span onclick="closeInbox()" style="cursor: pointer; color: #6a6178; font-weight: 800; font-size: 1.2rem; padding: 5px;">✕</span>
             </div>
             <p style="color: #cfd0d9; line-height: 1.7; font-size: 0.95rem; margin-bottom: 25px;">
-                <strong>HIIIIIIIIIIIIIIIII AARNA! 🎉🥳</strong><br><br>
-                The legends from the old <strong>8th A</strong> hallway have officially broken past your brother's code parameters to drop off a massive birthday wave! 💖 <br><br>
-                Remember all the chaotic lunch breaks, shared jokes, running down classrooms, and classroom moments? Your entire squad remembers the vibe you brought to the class. Even though time moves on and settings update, the 8th A legacy is hard-coded into the mainframe forever! Stay completely spectacular! ⚡🏫✨
+                <strong>HAPPY BIRTHDAY KIDDO WOHOOOOO! 🎉🥳 ❤️✨💖</strong><br><br>
+                You are sweet, loyal, absolutely my rock, and I am so incredibly grateful to have you in my life! ❤️❤️❤️ 🥺👉👈<br><br>
+                The legends from the old <strong>8th A</strong> hallway have officially broken past your brother's code parameters to drop off this massive birthday wave! 💖 💕 Let's look back on all the chaotic lunch breaks, shared jokes, running down classrooms, and classroom moments. Your entire squad remembers the incredible vibe you brought to the class every single day. <br><br>
+                Even though time moves on and settings update, the 8th A legacy is hard-coded into the mainframe forever! Stay completely spectacular, gorgeous, and wonderful! ⚡🏫✨ ❤️🔥🥰💕
             </p>
             <p style="color: #6a6178; font-size:0.8rem; margin-bottom:10px;">🔓 Hint passcode: AARNA15</p>
             <button class="confirm-btn" style="background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));" onclick="closeInbox()">Close Transmission xoxo</button>
+        </div>
+    </div>
+
+    <div id="dhananjay-modal">
+        <div class="modal-content" style="max-width: 550px; text-align: left; border-color: var(--neon-pink);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px;">
+                <h2 class="gate-title" style="color: var(--neon-pink); margin: 0;">💬 Intercepted Message Protocol</h2>
+                <span onclick="closeDhananjay()" style="cursor: pointer; color: #6a6178; font-weight: 800; font-size: 1.2rem; padding: 5px;">✕</span>
+            </div>
+            <p style="color: #cfd0d9; line-height: 1.7; font-size: 0.95rem; margin-bottom: 20px;">
+                <span style="color: var(--neon-cyan); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 8px;">// Transmission Sender: Dhananjay & The Whole 8th A</span>
+                <strong>Dear Aarna, you absolute immature kiddo 😂❤️💓...</strong><br><br>
+                Happy birthday kiddo wohoooooo! You are sweet, loyal, my absolute rock, and I am so incredibly grateful to have you in my life! 🥰💕 May this brand new year bring you infinite joy, absolute success, and brilliant good health! 🌸✨ 
+            </p>
+            <p style="color: #cfd0d9; line-height: 1.7; font-size: 0.95rem; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 15px; margin-bottom: 25px;">
+                <span style="color: var(--neon-pink); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 8px;">// Bonus Network Overdrive Layer:</span>
+                Seriously, words aren't enough to describe how massive your energy is. You keep everyone grounded, make the most boring days completely hilarious, and stick by your people with absolute unshakeable loyalty. Never stop being the chaotic, loving, amazing person you are today. The entire mainframe is cheering for you! 🥂🎂🚀✨💖💝🔥
+            </p>
+            <button class="confirm-btn" onclick="closeDhananjay()">Continue to Main Interface ✨</button>
         </div>
     </div>
 
@@ -594,7 +614,7 @@
     <div id="welcome" class="page active">
         <div style="text-align: center; margin-top: 2vh;">
             <div class="title-pre">// Transmission Stabilized Successfully</div>
-            <h1 class="title-main">Happy Birthday</h1>
+            <h1 class="title-main">Happy B'day</h1>
             <div class="title-cursive">Aarna</div>
             
             <div class="letter-box">
@@ -758,6 +778,16 @@
 
         function closeInbox() {
             document.getElementById('inbox-modal').classList.remove('active');
+            // CHAIN REACTION: Instantly show Dhananjay's popup right after closing this one
+            setTimeout(() => {
+                document.getElementById('dhananjay-modal').classList.add('active');
+                triggerExplosion();
+            }, 300);
+        }
+
+        // --- DHANANJAY POPUP ACTIONS ---
+        function closeDhananjay() {
+            document.getElementById('dhananjay-modal').classList.remove('active');
         }
 
         // --- NAVIGATION INTERFACE CONTROLLER FIXED ---
