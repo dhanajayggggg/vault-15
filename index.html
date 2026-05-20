@@ -586,9 +586,9 @@
     </div>
 
     <nav>
-        <button class="nav-btn active" onclick="switchTab('welcome')">01 // Interface</button>
-        <button class="nav-btn" onclick="switchTab('vault')">02 // Archive</button>
-        <button class="nav-btn" onclick="switchTab('wishes')">03 // Wishes</button>
+        <button class="nav-btn active" onclick="switchTab('welcome', event)">01 // Interface</button>
+        <button class="nav-btn" onclick="switchTab('vault', event)">02 // Archive</button>
+        <button class="nav-btn" onclick="switchTab('wishes', event)">03 // Wishes</button>
     </nav>
 
     <div id="welcome" class="page active">
@@ -756,18 +756,26 @@
             document.getElementById('notification-popup').classList.remove('pop');
         }
 
-        // Keep the closing event smooth
         function closeInbox() {
             document.getElementById('inbox-modal').classList.remove('active');
         }
 
-        // --- NAVIGATION INTERFACE CONTROLLER ---
-        function switchTab(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        // --- NAVIGATION INTERFACE CONTROLLER FIXED ---
+        function switchTab(id, event) {
+            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
 
-            document.getElementById(id).classList.add('active');
-            if(window.event && window.event.target) window.event.target.classList.add('active');
+            const targetPage = document.getElementById(id);
+            if (targetPage) {
+                targetPage.style.display = 'block';
+                targetPage.classList.add('active');
+            }
+            
+            if(event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
+            } else if (window.event && window.event.srcElement) {
+                window.event.srcElement.classList.add('active');
+            }
 
             if(id === 'welcome') triggerExplosion();
         }
@@ -791,14 +799,14 @@
             }
         }
 
-        // --- QUANTUM PARTICLES ENVIRONMENT ENGINE ---
+        // --- QUANTUM PARTICLES ENVIRONMENT ENGINE (FIXED VALS) ---
         const canvas = document.getElementById('ambient-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
 
         function setCanvasDimensions() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            canvas.width = window.innerWidth || 800;
+            canvas.height = window.innerHeight || 600;
         }
         window.addEventListener('resize', setCanvasDimensions);
         setCanvasDimensions();
@@ -807,13 +815,16 @@
             constructor(isExplosion = false) {
                 this.x = isExplosion ? canvas.width / 2 : Math.random() * canvas.width;
                 this.y = isExplosion ? canvas.height / 2 : Math.random() * canvas.height - 200;
-                this.size = Math.random() * 4 + 1.5; // Slightly scaled down for mobile memory limits
+                
+                let randomSize = Math.random() * 4 + 1.5;
+                this.size = isNaN(randomSize) ? 2 : randomSize;
+                
                 this.colors = ['#ff2a85', '#9d4edf', '#00f5ff', '#ffffff', '#ffee55'];
                 this.color = this.colors[Math.floor(Math.random() * this.colors.length)];
                 
                 if (isExplosion) {
                     const angle = Math.random() * Math.PI * 2;
-                    const power = Math.random() * 12 + 4; // Toned down power ranges so it scales smoothly on smaller screens
+                    const power = Math.random() * 12 + 4;
                     this.vx = Math.cos(angle) * power;
                     this.vy = Math.sin(angle) * power;
                 } else {
@@ -825,22 +836,23 @@
             update() {
                 this.x += this.vx;
                 this.y += this.vy;
-                this.vy += 0.03; // Light gravity drag
+                this.vy += 0.03;
             }
 
             render() {
+                if(isNaN(this.x) || isNaN(this.y) || isNaN(this.size)) return;
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fillStyle = this.color;
-                ctx.shadowBlur = isNaN(this.size) ? 0 : this.size * 2;
+                ctx.shadowBlur = this.size * 2;
                 ctx.shadowColor = this.color;
                 ctx.fill();
-                ctx.shadowBlur = 0; // Reset shadow spec instantly after print
+                ctx.shadowBlur = 0;
             }
         }
 
         function triggerExplosion() {
-            for(let i=0; i<85; i++) { // Optimized particle count for high-refresh mobile screen arrays
+            for(let i=0; i<85; i++) {
                 particles.push(new ParticleSystem(true));
             }
         }
