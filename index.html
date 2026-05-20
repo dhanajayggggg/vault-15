@@ -2,865 +2,345 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔒 Encrypted Sibling Protocol...</title>
-    <!-- Ultra premium Google Web Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Syne:wght@700;800&family=WindSong:wght@500&display=swap" rel="stylesheet">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vault 15</title>
     <style>
-        /* --- CORE CYBER-LAVENDER AESTHETIC CONSTANTS --- */
-        :root {
-            --bg-dark: #020005;
-            --panel-bg: rgba(10, 5, 22, 0.5);
-            --neon-pink: #ff2a85;
-            --neon-purple: #9d4edf;
-            --neon-cyan: #00f5ff;
-            --glass-border: rgba(157, 78, 223, 0.22);
-            --text-glow: 0 0 15px rgba(255, 42, 133, 0.6);
-        }
-
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        body {
-            background-color: var(--bg-dark);
-            color: #ffffff;
-            overflow-x: hidden;
-            min-height: 100vh;
-            background: radial-gradient(circle at 50% 50%, #0c041c 0%, #010003 100%);
-            position: relative;
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #050508;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* DYNAMIC NEON AMBIENT ORBS BACKGROUND EFFECT */
-        body::before, body::after {
-            content: '';
-            position: fixed;
-            width: 400px;
-            height: 400px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(157, 78, 223, 0.12) 0%, rgba(0,0,0,0) 70%);
-            z-index: -1;
-            animation: floatOrbs 12s infinite alternate ease-in-out;
-            pointer-events: none;
-        }
-        body::before { top: -10%; left: -10%; }
-        body::after { bottom: -10%; right: -10%; animation-delay: -6s; }
-
-        @keyframes floatOrbs {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(60px, 40px) scale(1.2); }
-        }
-
-        /* ==========================================
-           SUSPENSE GATE MECHANICS (THE LOCKS)
-           ========================================== */
-        #gate-screen, #confirm-modal, #inbox-modal {
-            position: fixed;
+        canvas {
+            position: absolute;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 10000;
-            background: #020005;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.9s cubic-bezier(0.86, 0, 0.07, 1);
-        }
-
-        #confirm-modal, #inbox-modal {
-            z-index: 10001;
-            background: rgba(2, 0, 5, 0.94);
-            opacity: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
             pointer-events: none;
-            transform: scale(0.8) rotate(-2deg);
         }
 
-        #confirm-modal.active, #inbox-modal.active {
-            opacity: 1;
-            pointer-events: auto;
-            transform: scale(1) rotate(0deg);
-            animation: pulseModalBorder 2s infinite alternate;
-        }
-
-        @keyframes pulseModalBorder {
-            0% { box-shadow: 0 0 20px rgba(157, 78, 223, 0.1); }
-            100% { box-shadow: 0 0 40px rgba(255, 42, 133, 0.25); }
-        }
-
-        #gate-screen.unlocked {
-            opacity: 0;
-            pointer-events: none;
-            transform: scale(1.15) translateY(-50px);
-        }
-
-        .gate-content, .modal-content {
-            text-align: center;
+        .vault-container {
+            position: relative;
+            z-index: 2;
             width: 90%;
-            max-width: 450px;
-            padding: 50px 40px;
-            border-radius: 32px;
-            background: var(--panel-bg);
-            backdrop-filter: blur(30px);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 30px 70px rgba(0,0,0,0.8);
-            animation: formEntrance 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-
-        @keyframes formEntrance {
-            from { transform: scale(0.9); opacity: 0; filter: blur(5px); }
-            to { transform: scale(1); opacity: 1; filter: blur(0); }
-        }
-
-        .gate-title {
-            font-family: 'Syne', sans-serif;
-            font-weight: 700;
-            letter-spacing: 4px;
-            font-size: 1.1rem;
-            color: #b3a7c9;
-            text-transform: uppercase;
-            margin-bottom: 25px;
-            animation: textShimmer 3s infinite alternate;
-        }
-
-        @keyframes textShimmer {
-            0% { text-shadow: 0 0 5px rgba(255,255,255,0.1); }
-            100% { text-shadow: 0 0 15px rgba(0, 245, 255, 0.5), 0 0 2px rgba(0,245,255,1); color: #fff; }
-        }
-
-        .passcode-input {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid var(--glass-border);
-            padding: 18px;
-            border-radius: 16px;
-            color: #fff;
-            font-size: 1.2rem;
+            max-width: 360px;
+            background: rgba(10, 10, 18, 0.75);
+            border: 1px solid rgba(138, 43, 226, 0.25);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 30px 24px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 
+                        0 0 30px rgba(138, 43, 226, 0.15);
             text-align: center;
-            letter-spacing: 5px;
-            font-weight: 700;
-            outline: none;
-            transition: all 0.4s ease;
-            margin-bottom: 20px;
-        }
-
-        .passcode-input:focus {
-            border-color: var(--neon-pink);
-            box-shadow: 0 0 20px rgba(255, 42, 133, 0.3);
-            transform: scale(1.02);
-        }
-
-        .gate-btn, .confirm-btn {
-            width: 100%;
-            background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
-            color: white;
-            border: none;
-            padding: 18px;
-            font-weight: 700;
-            border-radius: 16px;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 2px;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .gate-btn:hover, .confirm-btn:hover {
-            box-shadow: 0 0 30px rgba(255, 42, 133, 0.6);
-            transform: translateY(-4px) scale(1.02);
+        h2 {
+            color: #fff;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(255,255,255,0.2);
         }
 
-        .error-msg {
-            color: #ff3366;
-            font-size: 0.85rem;
-            margin-top: 12px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+        .subtitle {
+            color: #8a92b2;
+            font-size: 13px;
+            margin-bottom: 28px;
         }
 
-        /* ==========================================
-           SURPRISE NOTIFICATION TOAST POP ENGINE
-           ========================================== */
-        #notification-popup {
-            position: fixed;
-            bottom: -150px;
-            right: 30px;
-            background: rgba(18, 10, 36, 0.85);
-            border: 2px solid var(--neon-pink);
-            border-radius: 24px;
-            padding: 20px 25px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            color: #a3aed0;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+            padding-left: 4px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(20, 20, 35, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            border-color: #8a2be2;
+            background: rgba(20, 20, 35, 0.9);
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.25);
+        }
+
+        .btn-access {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #8a2be2, #4a00e0);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
             cursor: pointer;
-            z-index: 9999;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 15px 40px rgba(255, 42, 133, 0.3);
-            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.35);
-            max-width: 380px;
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
+            transition: all 0.2s ease;
+            margin-top: 8px;
         }
 
-        #notification-popup.pop {
-            bottom: 40px;
-            animation: bouncePulse 2s infinite alternate;
+        .btn-access:active {
+            transform: scale(0.97);
+            opacity: 0.9;
         }
 
-        @keyframes bouncePulse {
-            0% { transform: translateY(0); box-shadow: 0 15px 40px rgba(255, 42, 133, 0.3); }
-            100% { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(0, 245, 255, 0.4); border-color: var(--neon-cyan); }
-        }
-
-        .notif-badge {
-            width: 12px;
-            height: 12px;
-            background-color: var(--neon-pink);
-            border-radius: 50%;
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            box-shadow: 0 0 10px var(--neon-pink);
-        }
-
-        /* ==========================================
-           GRAND HAPPY BIRTHDAY BANNER ANIMATION
-           ========================================== */
-        #birthday-banner {
+        /* Modal Popup System */
+        .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 9999;
-            background: #020005;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        #birthday-banner.run {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .anim-title {
-            font-family: 'Syne', sans-serif;
-            font-weight: 800;
-            font-size: 6.5rem;
-            text-transform: uppercase;
-            letter-spacing: -3px;
-            line-height: 0.85;
-            background: linear-gradient(to right, #ff2a85, #ffff55, #00f5ff, #9d4edf);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            transform: scale(0.3);
-            opacity: 0;
-            text-align: center;
-        }
-
-        #birthday-banner.run .anim-title {
-            animation: cosmicZoom 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        @keyframes cosmicZoom {
-            0% { transform: scale(0.2) rotate(-10deg); opacity: 0; filter: blur(20px); }
-            40% { transform: scale(1.05) rotate(2deg); opacity: 1; filter: blur(0); }
-            70% { transform: scale(0.98) rotate(0deg); opacity: 1; }
-            100% { transform: scale(1) rotate(0deg); opacity: 1; }
-        }
-
-        /* ==========================================
-           CORE LAYOUT & NAVIGATION INTERFACES
-           ========================================== */
-        nav {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            padding: 30px;
-            position: fixed;
-            top: 0;
             width: 100%;
-            z-index: 1000;
-            background: rgba(2, 0, 5, 0.8);
-            backdrop-filter: blur(25px);
-            border-bottom: 1px solid rgba(255,255,255,0.02);
-        }
-
-        .nav-btn {
-            background: transparent;
-            border: none;
-            color: #6a6178;
-            padding: 10px 22px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            letter-spacing: 1.5px;
-            cursor: pointer;
+            height: 100%;
+            background: rgba(3, 3, 6, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 10;
+            opacity: 0;
+            visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             transition: all 0.4s ease;
-            position: relative;
         }
 
-        .nav-btn.active, .nav-btn:hover { color: #fff; }
-
-        .nav-btn.active::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 15%;
-            width: 70%;
-            height: 2px;
-            background: linear-gradient(90deg, var(--neon-pink), var(--neon-cyan));
-            box-shadow: 0 0 15px var(--neon-pink);
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
         }
 
-        .page {
-            display: none;
-            padding: 160px 20px 100px 20px;
-            min-height: 100vh;
-            max-width: 1150px;
-            margin: 0 auto;
+        .modal-box {
+            width: 85%;
+            max-width: 340px;
+            background: #0d0d18;
+            border: 1px solid rgba(0, 255, 200, 0.3);
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 255, 200, 0.15);
+            transform: scale(0.85);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .page.active {
-            display: block;
-            animation: screenReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        .modal-overlay.active .modal-box {
+            transform: scale(1);
         }
 
-        @keyframes screenReveal {
-            from { opacity: 0; filter: blur(15px); transform: translateY(25px) scale(0.98); }
-            to { opacity: 1; filter: blur(0); transform: translateY(0) scale(1); }
-        }
-
-        /* SYSTEM CORE TEXT DESIGNS */
-        .title-pre {
-            font-family: 'Syne', sans-serif;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 7px;
-            color: var(--neon-cyan);
-            margin-bottom: 15px;
-            text-shadow: 0 0 10px rgba(0, 245, 255, 0.3);
-        }
-
-        .title-main {
-            font-family: 'Syne', sans-serif;
-            font-weight: 800;
-            font-size: 6rem;
-            text-transform: uppercase;
-            line-height: 0.9;
-            letter-spacing: -3px;
-            background: linear-gradient(to bottom, #ffffff 30%, #857b9c 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .title-cursive {
-            font-family: 'WindSong', cursive;
-            font-size: 8rem;
-            color: #fff;
-            margin: -30px 0 40px 0;
-            text-shadow: var(--text-glow);
-            animation: extremeSwing 6s ease-in-out infinite;
+        .modal-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
             display: inline-block;
         }
 
-        @keyframes extremeSwing {
-            0%, 100% { transform: rotate(-3deg) translateY(0) scale(1); }
-            50% { transform: rotate(3deg) translateY(-10px) scale(1.03); text-shadow: 0 0 25px var(--neon-pink); }
-        }
-
-        /* --- THE LETTERS GRID CONTAINER --- */
-        .letter-box {
-            background: var(--panel-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 36px;
-            padding: 55px;
-            max-width: 880px;
-            text-align: left;
-            margin: 40px auto;
-            box-shadow: inset 0 0 40px rgba(157, 78, 223, 0.03);
-            line-height: 1.95;
-            font-size: 1.1rem;
-            color: #cfd0d9;
-            position: relative;
-            transition: all 0.5s ease;
-        }
-
-        .letter-box:hover {
-            border-color: rgba(255, 42, 133, 0.3);
-            box-shadow: inset 0 0 40px rgba(157, 78, 223, 0.05), 0 15px 40px rgba(0,0,0,0.4);
-        }
-
-        .letter-box h3 {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.2rem;
-            color: var(--neon-pink);
-            margin-bottom: 25px;
-            letter-spacing: 2px;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-            padding-bottom: 15px;
-            text-shadow: 0 0 10px rgba(255, 42, 133, 0.3);
-        }
-
-        /* --- ARCHIVE TRACK CARDS --- */
-        .page-header {
-            text-align: center;
-            font-family: 'Syne', sans-serif;
-            font-size: 2.2rem;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            margin-bottom: 60px;
-        }
-
-        .chapter-container {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            max-width: 850px;
-            margin: 0 auto;
-        }
-
-        .chapter-card {
-            background: var(--panel-bg);
-            border: 1px solid rgba(255,255,255,0.03);
-            padding: 40px;
-            border-radius: 28px;
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .chapter-card:hover {
-            border-color: var(--neon-cyan);
-            background: rgba(14, 7, 28, 0.65);
-            transform: translateX(10px) scale(1.01);
-            box-shadow: 0 10px 30px rgba(0, 245, 255, 0.08);
-        }
-
-        .chapter-num {
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: var(--neon-pink);
-            letter-spacing: 3px;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .chapter-title {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.5rem;
-            color: #fff;
-            margin-bottom: 12px;
-        }
-
-        /* --- THE MASONRY WISH CARDS --- */
-        .wishes-masonry {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
-            gap: 30px;
-        }
-
-        .aesthetic-wish {
-            background: rgba(255,255,255,0.015);
-            border: 1px solid rgba(255,255,255,0.04);
-            border-radius: 28px;
-            padding: 40px;
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .aesthetic-wish:hover {
-            background: var(--panel-bg);
-            border-color: var(--neon-purple);
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 45px rgba(157, 78, 223, 0.15);
-        }
-
-        .wish-tag {
-            font-size: 0.75rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--neon-cyan);
-            margin-bottom: 15px;
-            display: block;
+        .modal-title {
+            color: #00ffc8;
+            font-size: 18px;
             font-weight: 600;
+            margin-bottom: 10px;
         }
 
-        .aesthetic-wish h4 {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.35rem;
-            margin-bottom: 12px;
+        .modal-desc {
+            color: #b0b9d6;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .modal-close {
+            padding: 10px 24px;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.15);
             color: #fff;
+            border-radius: 10px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
 
-        .aesthetic-wish p {
-            color: #9f9fa8;
-            line-height: 1.75;
+        .modal-close:active {
+            background: rgba(255,255,255,0.05);
         }
 
-        #ambient-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 999;
+        .error-shake {
+            animation: shake 0.4s ease;
+            border-color: #ff3b30 !important;
+            box-shadow: 0 0 15px rgba(255, 59, 48, 0.2) !important;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            50% { transform: translateX(6px); }
+            75% { transform: translateX(-4px); }
         }
     </style>
 </head>
 <body>
 
-    <canvas id="ambient-canvas"></canvas>
+    <canvas id="particleCanvas"></canvas>
 
-    <!-- ==========================================
-       SUSPENSE GATE MECHANICS
-       ========================================== -->
-    <div id="gate-screen">
-        <div class="gate-content">
-            <div style="font-size: 2.2rem; margin-bottom: 20px; animation: extremeSwing 3s infinite;">🔒</div>
-            <h2 class="gate-title">System Sequence Locked</h2>
-            <input type="text" id="passcode" class="passcode-input" placeholder="•••••••" autocomplete="off">
-            <button class="gate-btn" onclick="checkFirstPass()">Decrypt Vault</button>
-            <div id="error" class="error-msg">Sequence string invalid. Verify input.</div>
+    <div class="vault-container" id="vaultCard">
+        <h2>VAULT-15</h2>
+        <div class="subtitle">Enter decryption keys to initialize</div>
+        
+        <div class="input-group">
+            <label>Name Identifier</label>
+            <input type="text" id="usernameInput" placeholder="Enter name" autocomplete="off" spellcheck="false">
+        </div>
+
+        <div class="input-group">
+            <label>Access Code</label>
+            <input type="password" id="passcodeInput" placeholder="••••" inputmode="numeric" pattern="[0-9]*">
+        </div>
+
+        <button class="btn-access" onclick="verifyAccess()">Decrypt Identity</button>
+    </div>
+
+    <!-- Surprise Modal Overlay -->
+    <div class="modal-overlay" id="alertModal">
+        <div class="modal-box">
+            <span class="modal-icon">✨</span>
+            <div class="modal-title" id="modalTitle">Access Granted</div>
+            <div class="modal-desc" id="modalBody">Welcome back to the secure environment.</div>
+            <button class="modal-close" onclick="closeModal()">Acknowledge</button>
         </div>
     </div>
 
-    <!-- DOUBLE SUSPENSE POPUP INTERRUPTION WITH TEASING BLUSHING EMOJIS -->
-    <div id="confirm-modal">
-        <div class="modal-content">
-            <h2 class="gate-title" style="color: var(--neon-pink); font-size: 1.4rem; margin-bottom: 15px;">Hold On... 🫣</h2>
-            <p style="color: #cbbfd9; line-height: 1.7; margin-bottom: 30px; font-size: 1.15rem;">
-                Are you sure you're actually my sister? 🥺👉👈 <br><br>
-                <span style="font-size: 1rem; color: var(--neon-cyan); font-weight: 600;">(The system detects the absolute cutest sister ever... 🫣💞🫠)</span>
-            </p>
-            <button class="confirm-btn" onclick="authorizeSister()">Yes, Let Me In! 👑❤️</button>
-        </div>
-    </div>
-
-    <!-- SURPRISE MESSAGE NOTIFICATION INBOX NOTIFICATION TOAST -->
-    <div id="notification-popup" onclick="openInbox()">
-        <div class="notif-badge"></div>
-        <div style="font-size: 2rem;">📩</div>
-        <div>
-            <h4 style="font-size: 0.85rem; color: var(--neon-pink); text-transform: uppercase; letter-spacing: 1px;">Incoming Transmission!</h4>
-            <p style="font-size: 1.05rem; font-weight: 800; color: #fff; margin-top: 2px;">From 8th A: HIIIIIIIIIIIIIIIII 👋✨</p>
-        </div>
-    </div>
-
-    <!-- SURPRISE INBOX COMPARTMENT MODAL -->
-    <div id="inbox-modal">
-        <div class="modal-content" style="max-width: 550px; text-align: left;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px;">
-                <h2 class="gate-title" style="color: var(--neon-cyan); margin: 0;">📬 Secret 8th A Archives</h2>
-                <span onclick="closeInbox()" style="cursor: pointer; color: #6a6178; font-weight: 800; font-size: 1.2rem;">✕</span>
-            </div>
-            <p style="color: #cfd0d9; line-height: 1.8; font-size: 1.05rem; margin-bottom: 25px;">
-                <strong>HIIIIIIIIIIIIIIIII AARNA! 🎉🥳</strong><br><br>
-                The legends from the old <strong>8th A</strong> hallway have officially broken past your brother's code parameters to drop off a massive birthday wave! 💖 <br><br>
-                Remember all the chaotic lunch breaks, shared jokes, running down classrooms, and classroom moments? Your entire squad remembers the vibe you brought to the class. Even though time moves on and settings update, the 8th A legacy is hard-coded into the mainframe forever! Stay completely spectacular! ⚡🏫✨
-            </p>
-            <button class="confirm-btn" style="background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));" onclick="closeInbox()">Close Transmission xoxo</button>
-        </div>
-    </div>
-
-    <!-- GRAND BREAKING BIRTHDAY INTERACTIVE LAYOUT -->
-    <div id="birthday-banner">
-        <h1 class="anim-title">✨ Happy 15th Birthday ✨<br><span style="font-family:'WindSong'; text-transform:none; font-size:10rem; -webkit-text-fill-color:white; filter: drop-shadow(0 0 20px var(--neon-pink));">Aarna</span></h1>
-    </div>
-
-    <!-- MAIN APP CORE LAYOUT -->
-    <nav>
-        <button class="nav-btn active" onclick="switchTab('welcome')">01 // The Interface</button>
-        <button class="nav-btn" onclick="switchTab('vault')">02 // 15-Year Archive</button>
-        <button class="nav-btn" onclick="switchTab('wishes')">03 // The Wish Array</button>
-    </nav>
-
-    <!-- ==========================================
-       PAGE 1: THE CORE TERMINAL INTERFACE
-       ========================================== -->
-    <div id="welcome" class="page active">
-        <div style="text-align: center; margin-top: 2vh;">
-            <div class="title-pre">// Transmission Stabilized Successfully</div>
-            <h1 class="title-main">Happy Birthday</h1>
-            <div class="title-cursive">Aarna</div>
-            
-            <div class="letter-box">
-                <h3>[ Sibling_Message_Manifest.dat // Cutest Sister Ever Detected 🫣💞 ]</h3>
-                <div id="typewriter-target" style="word-spacing: 1px;"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==========================================
-       PAGE 2: TIMELINE CHAPTERS (ARCHIVE)
-       ========================================== -->
-    <div id="vault" class="page">
-        <h2 class="page-header">15-Year Evolution Metrics</h2>
-        <div class="chapter-container">
-            
-            <div class="chapter-card">
-                <span class="chapter-num">Phase 01 // Roots</span>
-                <h3 class="chapter-title">The Initial Launch Matrix (Ages 1-5)</h3>
-                <p style="color: #92939e; line-height: 1.6;">The spectacular beginning of a literal legend. Absolute endless running speed loops across the house architecture, structural chaos engine deployed daily, and bypassing house guidelines effortlessly with just an iconic smile.</p>
-            </div>
-
-            <div class="chapter-card">
-                <span class="chapter-num">Phase 02 // Baseline</span>
-                <h3 class="chapter-title">The Core Cognitive Architecture (Ages 6-10)</h3>
-                <p style="color: #92939e; line-height: 1.6;">Primary school integration module successfully executed. Gathering an expansive list of amazing friends, compiling advanced critical learning algorithms, and engineering that trademark sense of humor that isolates you as completely original.</p>
-            </div>
-
-            <div class="chapter-card">
-                <span class="chapter-num">Phase 03 // Upgrade</span>
-                <h3 class="chapter-title">High School Module Optimization (Ages 11-14)</h3>
-                <p style="color: #92939e; line-height: 1.6;">Stepping cleanly into upper high school systems. Navigating intense exam processes like a software debugger, designing an intensely curated high-vibe music registry, and growing structurally into an incredibly clever human being.</p>
-            </div>
-
-            <div class="chapter-card" style="border-color: rgba(0, 245, 255, 0.35); box-shadow: 0 0 20px rgba(0, 245, 255, 0.05);">
-                <span class="chapter-num" style="color: var(--neon-cyan);">Phase 04 // Peak State</span>
-                <h3 class="chapter-title">Level 15 Operational Subsystem (The Present)</h3>
-                <p style="color: #92939e; line-height: 1.6;">Operational initialization complete: You occupy Level 15 today. Fiercely analytical, profoundly capable, incredibly original, and running 100% prepared to override any constraints the world attempts to establish.</p>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- ==========================================
-       PAGE 3: THE MAXIMUM WISH ARRAY
-       ========================================== -->
-    <div id="wishes" class="page">
-        <h2 class="page-header">Wish Overdrive Module</h2>
-        <div class="wishes-masonry">
-            
-            <div class="aesthetic-wish">
-                <span class="wish-tag">// Architecture</span>
-                <h4>The Sibling Priority Protocol 👑</h4>
-                <p>Happy 15th Birthday, Aarna! You continue to evolve sharper, colder, and more creative with every single calendar cycle. But let's never forget who wrote the base structural code for this family. Insanely proud of your work ethic and focus!</p>
-            </div>
-
-            <div class="aesthetic-wish">
-                <span class="wish-tag" style="color: var(--neon-purple);">// High Level</span>
-                <h4>Total Exam File Deletion 🚀</h4>
-                <p>Wishing your 15th solar cycle introduces zero memory latency, absolute flawless answers across all test modules, top tier analytics, and total evasion of high school stress parameters. Go rule the school ranking systems.</p>
-            </div>
-
-            <div class="aesthetic-wish">
-                <span class="wish-tag" style="color: var(--neon-pink);">// Core Values</span>
-                <h4>Sustained Beautiful Chaos ⚡</h4>
-                <p>Never underclock your personal processor or dilute your internal flame for anyone else's comfort. Phase 15 is explicitly configured for maximizing your confidence matrix, executing wild creative runs, and logging memories.</p>
-            </div>
-
-            <div class="aesthetic-wish">
-                <span class="wish-tag">// Quantum Stream</span>
-                <h4>Quantum Manifest Protocol 🔮</h4>
-                <p>May every thought vector, plan, or milestone initiative you think up this year immediately translate into physical reality with a 100% absolute completion status. No bugs, no script breaks—just straight winning.</p>
-            </div>
-
-            <div class="aesthetic-wish">
-                <span class="wish-tag" style="color: var(--neon-purple);">// Generator</span>
-                <h4>Hyper Infinite Power Supply 🔋</h4>
-                <p>Wishing you limitless pure internal momentum, natural high-grade motivation, perfect biological sleep patterns (even through major final exams), and an incredibly wide artistic zone to execute whatever your mind drafts.</p>
-            </div>
-
-            <div class="aesthetic-wish">
-                <span class="wish-tag" style="color: var(--neon-pink);">// Core Main</span>
-                <h4>The Rockstar Subroutine 🎸</h4>
-                <p>At 15, you aren't running generic system files—you are a premium, custom engineered rockstar blueprint. Keep throwing your music volume up to maximum, keeping your aesthetics clean, and running this life like its ultimate administrator.</p>
-            </div>
-
-            <!-- INSANE NEW WISHES ADDED BELOW -->
-            <div class="aesthetic-wish" style="border-color: var(--neon-cyan); background: rgba(0, 245, 255, 0.02);">
-                <span class="wish-tag" style="color: var(--neon-cyan);">// OVERDRIVE v15.0</span>
-                <h4>Galaxy Conqueror Routine 🌌🌍</h4>
-                <p>May your presence on this earth stay so unbelievably loud and aesthetic that the universe has no choice but to warp reality in your favor. Step up to the global server level and dominate every coordinate you claim!</p>
-            </div>
-
-            <div class="aesthetic-wish" style="border-color: var(--neon-pink); background: rgba(255, 42, 133, 0.02);">
-                <span class="wish-tag" style="color: var(--neon-pink);">// ABSOLUTE LIMITLESS</span>
-                <h4>Retro-Vibe Aesthetic Engine 🎧✨</h4>
-                <p>May your daily life function like a beautifully filtered, high-fidelity neon cyber dream. Unmatched style layers, immaculate playlists playing 24/7, zero background static, and maximum main-character energy flowing constantly.</p>
-            </div>
-
-            <div class="aesthetic-wish">
-                <span class="wish-tag" style="color: var(--neon-purple);">// UNSTOPPABLE MIND</span>
-                <h4>Synaptic Blitz Upgrade 🧠⚡</h4>
-                <p>Unlocking 100% processing capability for every exam, assignment, and debate. May complex concepts settle into your memories instantly like a supercomputer cache. Zero lag. 100% flawless logic speed.</p>
-            </div>
-
-            <div class="aesthetic-wish">
-                <span class="wish-tag">// Network</span>
-                <h4>Legendary Crew Alignment 🌐</h4>
-                <p>May your inner circle stay filled with nothing but true, high-vibe individuals who support your vision, make you laugh until your core code hurts, and help you unlock new levels of genuine fun this year!</p>
-            </div>
-
-            <div class="aesthetic-wish">
-                <span class="wish-tag" style="color: var(--neon-cyan);">// Output</span>
-                <h4>The Skyward Directive 🌌</h4>
-                <p>There are zero functional ceilings to what you can learn, build, or become from this day forward. Keep your visual sensors fixed on the stars, maintain your velocity, and trust the process completely!</p>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- ==========================================
-       CORE JAVASCRIPT SYSTEM ENGINE
-       ========================================== -->
     <script>
-        // --- PHASE 1 SUSPENSE: CHECK PASSCODE ---
-        function checkFirstPass() {
-            const input = document.getElementById('passcode').value.trim().toUpperCase();
-            if(input === 'AARNA15') {
-                document.getElementById('confirm-modal').classList.add('active');
-            } else {
-                const err = document.getElementById('error');
-                err.style.opacity = 1;
-                setTimeout(() => { err.style.opacity = 0; }, 2500);
-            }
-        }
-
-        // --- ENTER KEY FOR PASSCODE ---
-        document.getElementById('passcode').addEventListener('keypress', function(e) {
-            if(e.key === 'Enter') checkFirstPass();
-        });
-
-        // --- PHASE 2 SUSPENSE: AUTHORIZE & TRIGGER BANNER SPLASH ---
-        function authorizeSister() {
-            document.getElementById('confirm-modal').classList.remove('active');
-            document.getElementById('gate-screen').classList.add('unlocked');
-            
-            // Fire high energy banner explosion
-            const banner = document.getElementById('birthday-banner');
-            banner.classList.add('run');
-            triggerExplosion();
-
-            // Run grand zoom animation for 2.4 seconds, then transition cleanly
-            setTimeout(() => {
-                banner.style.opacity = '0';
-                setTimeout(() => {
-                    banner.style.display = 'none';
-                    startTypewriter();
-                    // TRIGGER INBOX NOTIFICATION SURPRISE TO POP UP AFTER 2 SECONDS
-                    setTimeout(() => {
-                        document.getElementById('notification-popup').classList.add('pop');
-                    }, 2000);
-                }, 600);
-            }, 2400);
-        }
-
-        // --- INBOX ACTIONS ---
-        function openInbox() {
-            document.getElementById('inbox-modal').classList.add('active');
-            document.getElementById('notification-popup').classList.remove('pop');
-        }
-
-        function closeInbox() {
-            document.getElementById('inbox-modal').classList.remove('active');
-        }
-
-        // --- NAVIGATION INTERFACE CONTROLLER ---
-        function switchTab(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-
-            document.getElementById(id).classList.add('active');
-            if(window.event && window.event.target) window.event.target.classList.add('active');
-
-            if(id === 'welcome') triggerExplosion();
-        }
-
-        // --- THE DYNAMIC TYPEWRITER SYSTEM ---
-        const bigLetterString = "Happy 15th Birthday, Aarna! 🥳✨ I wanted to construct a completely bespoke digital core to match your immense, original style. You are, without a single doubt, the cutest sister ever 🫣💞—even if I'll never admit that out loud outside of this script source. Watching you confidently navigate difficult high school levels, shape your distinct artistic outlook, and grow sharper with every passing day is genuinely inspiring.\n\nHere are my foundational core wishes for you on your special day:\n1. May your internal processing speed remain completely unmatched, keeping you lightyears ahead of any academic stress or hurdles. 🚀\n2. May your creative mainframe stay endlessly supplied with grand ideas, killer music vibes, and aesthetic brilliance. 🌌\n3. May your personal luck parameter be locked at 100%, turning every single one of your massive dreams into immediate physical reality. 🔮\n\nAs you cross into Phase 15 today, always remember to dream without system constraints, lock down your major ambitions, stay fiercely true to your own blueprint, and know that your brother has your code fully backed up forever. Welcome to Level 15, kiddo. Let's make this chapter legendary. 👑🔥";
-        let charIndex = 0;
-
-        function startTypewriter() {
-            const dest = document.getElementById('typewriter-target');
-            if (charIndex < bigLetterString.length) {
-                const char = bigLetterString.charAt(charIndex);
-                if (char === '\n') {
-                    dest.innerHTML += '<br>';
-                } else {
-                    dest.innerHTML += char;
-                }
-                charIndex++;
-                setTimeout(startTypewriter, 20); // Smooth high-end flow rate
-            }
-        }
-
-        // --- QUANTUM PARTICLES ENVIRONMENT ENGINE (WITH GLOW AND EXPANDED GRAPHICS) ---
-        const canvas = document.getElementById('ambient-canvas');
+        // Background Particles
+        const canvas = document.getElementById('particleCanvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
 
-        function setCanvasDimensions() {
+        function initCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         }
-        window.addEventListener('resize', setCanvasDimensions);
-        setCanvasDimensions();
+        initCanvas();
 
-        class ParticleSystem {
-            constructor(isExplosion = false) {
-                this.x = isExplosion ? canvas.width / 2 : Math.random() * canvas.width;
-                this.y = isExplosion ? canvas.height / 2 : Math.random() * canvas.height - 200;
-                this.size = Math.random() * 5 + 2;
-                this.colors = ['#ff2a85', '#9d4edf', '#00f5ff', '#ffffff', '#ffee55'];
-                this.color = this.colors[Math.floor(Math.random() * this.colors.length)];
-                
-                if (isExplosion) {
-                    const angle = Math.random() * Math.PI * 2;
-                    const power = Math.random() * 18 + 6;
-                    this.vx = Math.cos(angle) * power;
-                    this.vy = Math.sin(angle) * power;
-                } else {
-                    this.vx = Math.random() * 1.8 - 0.9;
-                    this.vy = Math.random() * 1.4 + 0.4;
-                }
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.5 + 0.5;
+                this.speedX = Math.random() * 0.4 - 0.2;
+                this.speedY = Math.random() * 0.4 - 0.2;
+                this.alpha = Math.random() * 0.5 + 0.2;
             }
-
             update() {
-                this.x += this.vx;
-                this.y += this.vy;
-                this.vy += 0.03; // Light gravity drag
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
             }
-
-            render() {
+            draw() {
+                ctx.fillStyle = `rgba(138, 43, 226, ${this.alpha})`;
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.shadowBlur = isNaN(this.size) ? 0 : this.size * 2;
-                ctx.shadowColor = this.color;
                 ctx.fill();
-                ctx.shadowBlur = 0; // Reset shadow spec instantly after print
             }
         }
 
-        function triggerExplosion() {
-            for(let i=0; i<140; i++) {
-                particles.push(new ParticleSystem(true));
+        function spawnParticles() {
+            particles = [];
+            const count = Math.min(60, Math.floor((canvas.width * canvas.height) / 12000));
+            for(let i = 0; i < count; i++) {
+                particles.push(new Particle());
             }
         }
+        spawnParticles();
 
-        function engineLoop() {
+        function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach((p, idx) => {
+            particles.forEach(p => {
                 p.update();
-                p.render();
-                if(p.y > canvas.height || p.x < 0 || p.x > canvas.width) {
-                    particles.splice(idx, 1);
-                }
+                p.draw();
             });
-
-            if(particles.length < 45) {
-                particles.push(new ParticleSystem(false));
-            }
-            requestAnimationFrame(engineLoop);
+            requestAnimationFrame(animate);
         }
-        engineLoop();
+        animate();
+
+        window.addEventListener('resize', () => {
+            initCanvas();
+            spawnParticles();
+        });
+
+        // Authentication & Pop-up Handling
+        function verifyAccess() {
+            const userField = document.getElementById('usernameInput');
+            const passField = document.getElementById('passcodeInput');
+            const card = document.getElementById('vaultCard');
+
+            const userVal = userField.value.trim().toLowerCase();
+            const passVal = passField.value.trim();
+
+            if ((userVal === 'aarna' && passVal === '15') || (userVal === 'kavish' && passVal === '15')) {
+                showModal("Access Granted ✨", "Verification successful! Redirecting to 8th A main directory... Welcome to the core framework.");
+            } else {
+                // Trigger bad input interface bounce
+                card.classList.add('error-shake');
+                userField.style.borderColor = '#ff3b30';
+                passField.style.borderColor = '#ff3b30';
+                
+                setTimeout(() => {
+                    card.classList.remove('error-shake');
+                }, 400);
+            }
+        }
+
+        // Clean error display reset on focus
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', () => {
+                document.getElementById('usernameInput').style.borderColor = '';
+                document.getElementById('passcodeInput').style.borderColor = '';
+            });
+        });
+
+        function showModal(title, text) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalBody').innerText = text;
+            document.getElementById('alertModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('alertModal').classList.remove('active');
+        }
     </script>
 </body>
 </html>
