@@ -69,35 +69,30 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: all 0.9s cubic-bezier(0.86, 0, 0.07, 1);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             overflow-y: auto;
             padding: 20px;
         }
 
         #confirm-modal, #inbox-modal, #dhananjay-modal {
             z-index: 10001;
-            background: rgba(2, 0, 5, 0.94);
+            background: rgba(2, 0, 5, 0.96);
             opacity: 0;
             pointer-events: none;
-            transform: scale(0.8) rotate(-2deg);
+            transform: scale(0.85) translateY(30px);
         }
 
         #confirm-modal.active, #inbox-modal.active, #dhananjay-modal.active {
             opacity: 1;
             pointer-events: auto;
-            transform: scale(1) rotate(0deg);
-            animation: pulseModalBorder 2s infinite alternate;
-        }
-
-        @keyframes pulseModalBorder {
-            0% { box-shadow: 0 0 20px rgba(157, 78, 223, 0.1); }
-            100% { box-shadow: 0 0 40px rgba(255, 42, 133, 0.25); }
+            transform: scale(1) translateY(0);
+            box-shadow: 0 0 50px rgba(255, 42, 133, 0.2);
         }
 
         #gate-screen.unlocked {
             opacity: 0;
             pointer-events: none;
-            transform: scale(1.15) translateY(-50px);
+            transform: scale(1.1) translateY(-30px);
         }
 
         .gate-content, .modal-content {
@@ -111,12 +106,6 @@
             -webkit-backdrop-filter: blur(30px);
             border: 1px solid var(--glass-border);
             box-shadow: 0 30px 70px rgba(0,0,0,0.8);
-            animation: formEntrance 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-
-        @keyframes formEntrance {
-            from { transform: scale(0.9); opacity: 0; filter: blur(5px); }
-            to { transform: scale(1); opacity: 1; filter: blur(0); }
         }
 
         .gate-title {
@@ -169,13 +158,13 @@
             cursor: pointer;
             text-transform: uppercase;
             letter-spacing: 2px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s ease;
             -webkit-tap-highlight-color: transparent;
         }
 
         .gate-btn:hover, .confirm-btn:hover {
             box-shadow: 0 0 30px rgba(255, 42, 133, 0.6);
-            transform: translateY(-4px) scale(1.02);
+            transform: translateY(-2px);
         }
 
         .error-msg {
@@ -206,7 +195,7 @@
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             box-shadow: 0 15px 40px rgba(255, 42, 133, 0.3);
-            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.35);
+            transition: bottom 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.35);
         }
 
         @media (min-width: 480px) {
@@ -223,8 +212,8 @@
         }
 
         @keyframes bouncePulse {
-            0% { transform: translateY(0); box-shadow: 0 15px 40px rgba(255, 42, 133, 0.3); }
-            100% { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(0, 245, 255, 0.4); border-color: var(--neon-cyan); }
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-5px); border-color: var(--neon-cyan); }
         }
 
         .notif-badge {
@@ -590,8 +579,8 @@
             </div>
             <p style="color: #cfd0d9; line-height: 1.7; font-size: 0.95rem; margin-bottom: 20px;">
                 <span style="color: var(--neon-cyan); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 8px;">// Transmission Sender: Dhananjay & The Whole 8th A</span>
-                <strong>Dear Aarna, you absolute immature kiddo 😂❤️💓...</strong><br><br>
-                Happy birthday kiddo wohoooooo! You are sweet, loyal, my absolute rock, and I am so incredibly grateful to have you in my life! 🥰💕 May this brand new year bring you infinite joy, absolute success, and brilliant good health! 🌸✨ 
+                <strong>Dear Aarna, immature kiddo ❤️💓...</strong><br><br>
+                Happy birthday kiddo wohoooooo! You are sweet, loyal, my rock, and I am so grateful to have you in my life 🥰💕 May this new year bring joy and success and good health! 🌸✨ 
             </p>
             <p style="color: #cfd0d9; line-height: 1.7; font-size: 0.95rem; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 15px; margin-bottom: 25px;">
                 <span style="color: var(--neon-pink); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 8px;">// Bonus Network Overdrive Layer:</span>
@@ -770,19 +759,22 @@
             }, 2400);
         }
 
-        // --- INBOX ACTIONS ---
+        // --- INBOX ACTIONS (FORCE HARD POPPING SEQUENCING) ---
         function openInbox() {
             document.getElementById('inbox-modal').classList.add('active');
             document.getElementById('notification-popup').classList.remove('pop');
         }
 
         function closeInbox() {
-            document.getElementById('inbox-modal').classList.remove('active');
-            // CHAIN REACTION: Instantly show Dhananjay's popup right after closing this one
-            setTimeout(() => {
-                document.getElementById('dhananjay-modal').classList.add('active');
-                triggerExplosion();
-            }, 300);
+            // Drop visibility index immediately 
+            const inbox = document.getElementById('inbox-modal');
+            inbox.classList.remove('active');
+            
+            // Instantly activate the next step without timers fighting browser frames
+            const dhananjay = document.getElementById('dhananjay-modal');
+            dhananjay.style.display = 'flex';
+            dhananjay.classList.add('active');
+            triggerExplosion();
         }
 
         // --- DHANANJAY POPUP ACTIONS ---
